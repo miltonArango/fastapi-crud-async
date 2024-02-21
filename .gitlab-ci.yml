@@ -45,6 +45,4 @@ deploy:docker:
         paths:
             - $ARTIFACTS_DIR/
     script:
-        - docker-compose build 
-        - docker-compose pull
-        - docker-compose up -d
+        - docker-compose up -d --build
