@@ -1,4 +1,7 @@
-image: python:3.11
+image: docker:stable-git
+
+services:
+    - docker:dind
 
 variables:
     ARTIFACTS_DIR: $CI_PROJECT_DIR/artifacts
@@ -14,11 +17,9 @@ stages:
     # - integration-test
 
 before_script:
+    - set -e
+    - if [ "$CI_JOB_NAME" = "build-test:go" ]; then apk update && apk add --no-cache build-base git curl bash docker; fi
     - mkdir -p $ARTIFACTS_DIR
-    - python --version ; pip --version  # For debugging
-    - pip install virtualenv
-    - virtualenv venv
-    - source venv/bin/activate
 
 build-test:docker:
     image: postgres:15.1-alpine
@@ -33,5 +34,9 @@ build-test:docker:
             - $ARTIFACTS_DIR/
     script:
         - cd src
-        - pip install -r requirements.txt
+        - export PYTHONUNBUFFERED=1
+        - apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+        - python3 -m ensurepip
+        - pip3 install --no-cache --upgrade pip setuptools
+        - pip3 install -r requirements.txt
         - pytest .
