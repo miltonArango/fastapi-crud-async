@@ -1,7 +1,4 @@
-image: docker:stable-git
-
-services:
-    - docker:dind
+image: python:3.11
 
 variables:
     ARTIFACTS_DIR: $CI_PROJECT_DIR/artifacts
@@ -12,20 +9,16 @@ cache:
   paths:
     - .cache/pip
 
-
 stages:
     - build-test
     # - integration-test
 
 before_script:
-    - set -e
-    - if [ "$CI_JOB_NAME" = "build-test:docker" ]; then apk update && apk add --no-cache build-base git curl python3.11 bash docker; fi
     - mkdir -p $ARTIFACTS_DIR
     - python3 --version ; pip3 --version  # For debugging
     - pip3 install virtualenv
     - virtualenv venv
     - source venv/bin/activate
-
 
 build-test:docker:
     image: postgres:15.1-alpine
