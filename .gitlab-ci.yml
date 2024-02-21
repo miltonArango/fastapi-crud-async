@@ -15,8 +15,8 @@ stages:
 
 before_script:
     - mkdir -p $ARTIFACTS_DIR
-    - python3 --version ; pip3 --version  # For debugging
-    - pip3 install virtualenv
+    - python --version ; pip --version  # For debugging
+    - pip install virtualenv
     - virtualenv venv
     - source venv/bin/activate
 
