@@ -37,9 +37,7 @@ test:python:
 
 deploy:docker:
     image: 
-        name: docker/compose:2.23.3
-        # needed in order to be able to run custom scripts
-        entrypoint: [""]
+        name: docker/stable-git
     stage: deploy
     dependencies:
         - test:python
@@ -48,4 +46,7 @@ deploy:docker:
         paths:
             - $ARTIFACTS_DIR/
     script:
+        - curl -SL https://github.com/docker/compose/releases/download/v2.24.6/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+        - sudo chmod +x /usr/local/bin/docker-compose
+        - docker-compose --version
         - docker-compose up -d --build
