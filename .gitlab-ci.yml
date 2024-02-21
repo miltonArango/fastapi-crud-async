@@ -21,8 +21,6 @@ stages:
     - deploy
 
 before_script:
-    - set -e
-    - if [ "$CI_JOB_NAME" = "test:python" ]; then apk update && apk add --no-cache build-base git curl bash docker; fi
     - mkdir -p $ARTIFACTS_DIR
 
 test:python:
@@ -46,6 +44,7 @@ deploy:docker:
         paths:
             - $ARTIFACTS_DIR/
     script:
+        - apk update && apk add --no-cache build-base git curl bash
         - curl -SL https://github.com/docker/compose/releases/download/v2.24.6/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
         - sudo chmod +x /usr/local/bin/docker-compose
         - docker-compose --version
