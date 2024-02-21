@@ -18,13 +18,14 @@ stages:
     # - integration-test
 
 before_script:
-    - python --version ; pip --version  # For debugging
-    - pip install virtualenv
+    - set -e
+    - if [ "$CI_JOB_NAME" = "build-test:docker" ]; then apk update && apk add --no-cache build-base git curl python3.11 bash docker; fi
+    - mkdir -p $ARTIFACTS_DIR
+    - python3 --version ; pip3 --version  # For debugging
+    - pip3 install virtualenv
     - virtualenv venv
     - source venv/bin/activate
-    - set -e
-    - if [ "$CI_JOB_NAME" = "build-test:docker" ]; then apk update && apk add --no-cache build-base git curl bash docker; fi
-    - mkdir -p $ARTIFACTS_DIR
+
 
 build-test:docker:
     image: postgres:15.1-alpine
