@@ -37,7 +37,7 @@ test:python:
 
 deploy:docker:
     image: 
-        name: docker/compose:1.24.0
+        name: docker/compose:2.23.3
         # needed in order to be able to run custom scripts
         entrypoint: [""]
     stage: deploy
