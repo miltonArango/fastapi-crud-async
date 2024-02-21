@@ -40,4 +40,5 @@ build-test:docker:
         - pip3 install --no-cache --upgrade pip setuptools
         - pip3 install -r requirements.txt
         - export DATABASE_URL=postgresql://hello_fastapi:hello_fastapi@localhost/hello_fastapi_dev
+        - docker run -d -e  POSTGRES_USER=hello_fastapi -e POSTGRES_PASSWORD=hello_fastapi -e POSTGRES_DB=hello_fastapi_dev -p 5432:5432 postgres:15.1-alpine
         - pytest .
