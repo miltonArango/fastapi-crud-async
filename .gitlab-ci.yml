@@ -10,8 +10,6 @@ variables:
     POSTGRES_USER: $POSTGRES_USER
     POSTGRES_PASSWORD: $POSTGRES_PASSWORD
     POSTGRES_DB: $POSTGRES_DB
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_DRIVER: overlay2
 
 # https://pip.pypa.io/en/stable/topics/caching/
 cache:
@@ -38,6 +36,11 @@ test:python:
 deploy:docker:
     image: 
         name: docker:dind
+    variables:
+        DOCKER_HOST: tcp://docker:2375
+        DOCKER_TLS_CERTDIR: ""
+    services:
+        - docker:dind
     stage: deploy
     dependencies:
         - test:python
