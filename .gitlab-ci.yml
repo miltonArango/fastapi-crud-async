@@ -37,7 +37,7 @@ test:python:
 
 deploy:docker:
     image: 
-        name: docker/stable-git
+        name: docker:stable-git
     stage: deploy
     dependencies:
         - test:python
