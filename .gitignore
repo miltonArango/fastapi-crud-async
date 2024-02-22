@@ -1,2 +1,5 @@
 __pycache__
 env
+nginx/certs/*
+.env
+.pytest_cache

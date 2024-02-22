@@ -9,6 +9,7 @@ Check out the [post](https://testdriven.io/blog/fastapi-crud).
 Build the images and run the containers:
 
 ```sh
+$ export DOCKER_DEFAULT_PLATFORM=linux/amd64
 $ docker-compose up -d --build
 ```
 

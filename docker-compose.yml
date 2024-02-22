@@ -8,9 +8,17 @@ services:
     volumes:
       - ./src/:/usr/src/app/
     ports:
-      - 8002:8000
+      - 8000:8000
     environment:
       - DATABASE_URL=postgresql://hello_fastapi:hello_fastapi@db/hello_fastapi_dev
+
+  go-web:
+    build:
+      context: golang-sample-app
+      dockerfile: Dockerfile.multistage
+    ports:
+      - 8080:8080
+
   db:
     image: postgres:15.1-alpine
     volumes:
@@ -21,6 +29,56 @@ services:
       - POSTGRES_USER=hello_fastapi
       - POSTGRES_PASSWORD=hello_fastapi
       - POSTGRES_DB=hello_fastapi_dev
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      - ./nginx/conf/oauth2.conf:/etc/nginx/conf.d/oauth2.conf:ro
+      - ./nginx/conf/web.conf:/etc/nginx/conf.d/web.conf:ro
+      - ./nginx/conf/go-web.conf:/etc/nginx/conf.d/go-web.conf:ro
+      - ./nginx/conf/.htpasswd:/etc/nginx/.htpasswd:ro
+      - ./nginx/certs:/etc/nginx/ssl
+    depends_on:
+      - web
+      - oauth2-proxy
+
+  oauth2-proxy:
+    image: bitnami/oauth2-proxy:7.6.0
+    command:
+      - --http-address
+      - 0.0.0.0:4180 
+      - --cookie-domain
+      - localtest.me
+      - --whitelist-domain=*.localtest.me
+    environment:
+      OAUTH2_PROXY_COOKIE_SECRET: y0aBhbKuSolzQb-7P1wDR_kd7OIzpEF3CLnerOVSyrU=
+      OAUTH2_PROXY_UPSTREAMS: http://web:8000
+      OAUTH2_PROXY_PROVIDER_DISPLAY_NAME: Github
+      OAUTH2_PROXY_PROVIDER: github 
+      OAUTH2_PROXY_CLIENT_ID: ${CLIENT_ID}
+      OAUTH2_PROXY_CLIENT_SECRET: ${CLIENT_SECRET}
+      OAUTH2_PROXY_PASS_ACCESS_TOKEN: true 
+      OAUTH2_PROXY_EMAIL_DOMAINS: '*' 
+      OAUTH2_PROXY_REDIRECT_URL: https://auth.localtest.me/oauth2/callback
+      OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:4180
+      OAUTH2_PROXY_COOKIE_DOMAINS: .localtest.me
+      OAUTH2_PROXY_SESSION_STORE_TYPE: cookie
+      OAUTH2_PROXY_COOKIE_SAMESITE: lax
+      OAUTH2_PROXY_REVERSE_PROXY: true
+      OAUTH2_PROXY_COOKIE_CSRF_PER_REQUEST: true
+      OAUTH2_PROXY_COOKIE_CSRF_EXPIRE: 5m
+      OAUTH2_PROXY_SCOPE: user:email read:org
+      OAUTH2_PROXY_PASS_USER_HEADERS: true
+      OAUTH2_PROXY_SET_AUTHORIZATION_HEADER: true
+      OAUTH2_PROXY_SET_XAUTHREQUEST: true
+      OAUTH2_PROXY_COOKIE_SECURE: true
+      OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: false
+    ports:
+      - 4180:4180 
 
 volumes:
   postgres_data:
