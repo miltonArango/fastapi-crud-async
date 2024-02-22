@@ -45,18 +45,27 @@
       </ul>
     </li>
     <li>
+      <a href="#architecture">Architecture</a>
+    </li>
+    <li>
+      <a href="#assignment">Assignment</a>
+    </li>
+    <li>
+      <a href="#stretch-goals">Stretch Goals</a>
+    </li>
+    <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#endpoints">Endpoints</a></li>
+    <li><a href="#ssl-certificate-generation">SSL Certificate Generation</a></li>
+    <li><a href="#database-management">Database Management</a></li>
+    <li><a href="#database-migrations">Database Migrations</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -80,7 +89,7 @@ For this assignment, I've completed the following tasks:
 3. Register a Gitlab runner instance on your device with your local Gitlab instance.
 4. Write a `gitlab-ci.yml` file to automate the build and deployment of your service using the Gitlab runner connected in the previous step.
 
-### Stretch Goals:
+### Stretch Goals
 All the following goals have been completed as well:
 
 - Test your service after each build and deploy only if the tests are successful.
@@ -136,6 +145,7 @@ The project works with docker compose to spin up all the containers necessary to
 2. Fill in the necessary environment variables in a .env file.
 3. Run the Docker compose stack.
    ```sh
+   export DATABASE_URL=postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres/$POSTGRES_DB
    docker compose up -d --build
    ```
 
