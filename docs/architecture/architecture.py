@@ -1,7 +1,7 @@
 from diagrams import Cluster, Diagram, Edge
 from diagrams.onprem.auth import Oauth2Proxy
 from diagrams.onprem.ci import GitlabCI
-from diagrams.onprem.client import Client
+from diagrams.onprem.client import Client, Users
 from diagrams.onprem.container import Docker
 from diagrams.onprem.database import PostgreSQL
 from diagrams.onprem.vcs import Github
@@ -13,6 +13,7 @@ from diagrams.programming.language import Go
 with Diagram(name="Solution Architecture", show=False):
     ingress = Nginx("Reverse Proxy")
     devops_admin = Client("Developer")
+    users = Users("External Users")
 
     with Cluster("Containerized Web Services"):
         fast_api = FastAPI("FastAPI App")
@@ -42,4 +43,6 @@ with Diagram(name="Solution Architecture", show=False):
     ci_runner >> Edge(label="Run Jobs") >> ci_server
 
     devops_admin >> Edge(label="Push To") >> ci_server
+
+    users >> ingress
 

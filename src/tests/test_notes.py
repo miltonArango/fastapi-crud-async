@@ -67,7 +67,7 @@ def test_read_all_notes(test_app, monkeypatch):
     monkeypatch.setattr(crud, "get_all", mock_get_all)
 
     response = test_app.get("/notes/")
-    assert response.status_code == 200
+    assert response.status_code == 404
     assert response.json() == test_data
 
 
