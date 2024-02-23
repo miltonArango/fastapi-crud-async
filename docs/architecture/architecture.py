@@ -1,26 +1,27 @@
 from diagrams import Cluster, Diagram, Edge
-from diagrams.onprem.analytics import Spark
 from diagrams.onprem.auth import Oauth2Proxy
 from diagrams.onprem.ci import GitlabCI
 from diagrams.onprem.client import Client
-from diagrams.onprem.compute import Server
 from diagrams.onprem.container import Docker
 from diagrams.onprem.database import PostgreSQL
 from diagrams.onprem.vcs import Github
 from diagrams.onprem.network import Nginx
+from diagrams.programming.framework import FastAPI
+from diagrams.programming.language import Go
+
 
 with Diagram(name="Solution Architecture", show=False):
-    ingress = Nginx("ingress")
+    ingress = Nginx("Reverse Proxy")
     devops_admin = Client("Developer")
 
-    with Cluster("Web Services"):
-        fast_api = Docker("FastAPI App")
-        go_service = Docker("Go App")
+    with Cluster("Containerized Web Services"):
+        fast_api = FastAPI("FastAPI App")
+        go_service = Go("Go App")
 
-    with Cluster("Database"):
-        db = PostgreSQL("fastapi db")
+    with Cluster("Containerized Database"):
+        db = PostgreSQL("App DB")
 
-    with Cluster("Auth"):
+    with Cluster("Containerized Auth"):
         auth = Oauth2Proxy("auth2-proxy")
         oauth_provider = Github("OAuth2 Provider")
 
@@ -33,12 +34,12 @@ with Diagram(name="Solution Architecture", show=False):
 
     auth >> Edge(label="Start OAuth Flow") >> ingress
     ingress >> Edge(label="Set Auth Cookie") >> auth
-    auth >> Edge(label="OAuth Provider") >> oauth_provider
+    auth >> Edge(label="Request Auth") >> oauth_provider
 
     fast_api >> db
     db >> fast_api
 
-    ci_runner >> Edge(label="run jobs") >> ci_server
+    ci_runner >> Edge(label="Run Jobs") >> ci_server
 
-    devops_admin >> Edge(label="pushes") >> ci_server
+    devops_admin >> Edge(label="Push To") >> ci_server
 

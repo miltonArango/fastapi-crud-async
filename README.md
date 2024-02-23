@@ -26,7 +26,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/miltonarango">
-    <img src="images/brand-logo.svg" alt="Logo" width="80" height="80">
+    <img src="images/brand-logo.svg" alt="Logo" width="160" height="200">
   </a>
 
 <h3 align="center">Test Assignment DevOps Milton</h3>
